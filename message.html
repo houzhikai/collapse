@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2255811_9hxoi1pkehv.css">
+    <title>Message消息提示</title>
+    <style>
+       .container {
+        max-width: 800px;
+        margin: 30px auto;
+        border-radius: 4px;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, .3);
+        padding: 16px;
+       }
+       .button {
+           padding: 10px 16px;
+           font-size: 14px;
+           color: #303030;
+           border: 1px solid #ccc;
+           cursor: pointer;
+           /* 默认的边框颜色去掉 */
+           outline: none;
+           border-radius: 4px;
+       }
+       .button:hover {
+        border-color: rgb(36, 21, 172);
+        color:rgb(37, 14, 240);
+        background-color: #fba;
+       }
+       .message {
+        /* 通过指定元素相对于屏幕视口（viewport）的位置来指定元素位置 */
+           position: fixed;
+           left: 50%;
+           top: 10px;
+           display: flex;
+           align-items: center;
+           transform: translate(-50%,-50px) ;
+           padding: 10px 16px;
+           background: #0cf018;
+           font-size: 14px;
+           color: #fff;
+           border-radius: 4px;
+           opacity: 0;
+           transition: all .3s;
+       }
+       .message .iconfont {
+           margin-right: 6px;
+       }
+       .message.show {
+           transform: translate(-50% ,10px);
+           opacity: 1;
+       }
+       .message.success {
+           background-color: #67c23a;
+       }
+       .message.warning {
+           background-color: #e6a23c;
+       }
+       .message.info {
+           background-color: #909399;
+       }
+       .message.danger {
+           background-color: #f56c6c;
+       }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Message消息提示</h2>
+        <div class="btn-group">
+            <button id="btn-success" class="button">成功</button>
+            <button id="btn-warning" class="button">警告</button>
+            <button id="btn-info" class="button">消息</button>
+            <button id="btn-danger" class="button">错误</button>
+        </div>
+    </div>
+
+    <script>
+        class Message {
+            constructor({type='success',text=''}) {
+                this.type = type
+                this.text = text
+
+                this.render()
+                this.bind()
+            }
+            render() {
+                let $div = document.createElement('div')
+                this.$message = $div
+                $div.classList.add('message')
+                $div.classList.add(this.type)
+                let $icon = document.createElement('span')
+                $icon.classList.add('iconfont')
+                $icon.classList.add('icon-' + this.type)
+                $div.appendChild($icon)
+                let $text = document.createTextNode(this.text)
+                $div.append($text)
+                document.body.appendChild($div)
+            }
+            bind() {
+                setTimeout(() => this.show())
+                setTimeout(() => this.destory(),3000 )
+            }
+            show() {
+                this.$message.classList.add('show')
+            }
+            destory() {
+                this.$message.classList.remove('show')
+                setTimeout(() =>this.$message.parentNode.removeChild(this.$message),400 )
+                
+            }
+        }
+        document.querySelector('#btn-success').onclick = function() {
+            // 一般不直接传递参数，可以传递参数，简单方便
+            // new Message('success','hello')
+            new Message({text:'我是提示',type:'success'})//一个节点及其后代的“渲染”文本内容
+        }
+        document.querySelector('#btn-warning').onclick = function() {
+            new Message({text:'我是警告',type:'warning'})
+        }
+        document.querySelector('#btn-info').onclick = function() {
+            new Message({text:'我是消息',type:'info'})
+        }
+        document.querySelector('#btn-danger').onclick = function() {
+            new Message({text:'我是危险',type:'danger'})
+        }
+
+    </script>
+
+
+</body>
+</html>
